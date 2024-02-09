@@ -1,0 +1,28 @@
+public class Stud {
+    private String fullName;
+    private int studentId;
+    private String course;
+
+    public Stud(String fullName, int studentId, String course) {
+        this.fullName = fullName;
+        this.studentId = studentId;
+        this.course = course;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public int getStudentId() {
+        return studentId;
+    }
+
+    public String getCourse() {
+        return course;
+    }
+
+    @Override
+    public String toString() {
+        return "Student Name: " + fullName + "\nStudent ID: " + studentId + "\nCourse: " + course + "\n";
+    }
+}
