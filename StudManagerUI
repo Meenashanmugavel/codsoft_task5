@@ -1,0 +1,125 @@
+import javafx.application.Application;
+import javafx.geometry.Insets;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+
+public class StudManagerUI extends Application {
+    private TextField nameField;
+    private TextField studentIdField;
+    private TextField courseField;
+    private TextArea displayArea;
+    private StudManager manager;
+
+    @Override
+    public void start(Stage primaryStage) {
+        BorderPane root = new BorderPane();
+        root.setPadding(new Insets(10));
+
+        manager = new StudManager();
+
+        Label headerLabel = new Label("Student Enrollment System");
+        headerLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold;");
+
+        VBox inputBox = createInputBox();
+
+        displayArea = new TextArea();
+        displayArea.setEditable(false);
+
+        VBox displayBox = new VBox(10);
+        displayBox.getChildren().addAll(new Label("Enrolled Students:"), displayArea);
+
+        root.setTop(headerLabel);
+        root.setLeft(inputBox);
+        root.setCenter(displayBox);
+
+        Scene scene = new Scene(root, 600, 400);
+        primaryStage.setScene(scene);
+        primaryStage.setTitle("Student Enrollment System");
+        primaryStage.show();
+    }
+
+    private VBox createInputBox() {
+        VBox inputBox = new VBox(10);
+        inputBox.setPadding(new Insets(10));
+
+        nameField = new TextField();
+        nameField.setPromptText("Full Name");
+
+        studentIdField = new TextField();
+        studentIdField.setPromptText("Student ID");
+
+        courseField = new TextField();
+        courseField.setPromptText("Course");
+
+        Button enrollButton = new Button("Enroll Student");
+        enrollButton.setOnAction(e -> enrollStudent());
+
+        Button removeButton = new Button("Remove Student");
+        removeButton.setOnAction(e -> removeStudent());
+
+        Button searchButton = new Button("Search Student");
+        searchButton.setOnAction(e -> searchStudent());
+
+        Button displayAllButton = new Button("Display All Students");
+        displayAllButton.setOnAction(e -> displayAllStudents());
+
+        inputBox.getChildren().addAll(
+                nameField, studentIdField, courseField,
+                enrollButton, removeButton, searchButton, displayAllButton
+        );
+
+        return inputBox;
+    }
+
+    private void enrollStudent() {
+        String fullName = nameField.getText();
+        int studentId = Integer.parseInt(studentIdField.getText());
+        String course = courseField.getText();
+
+        Stud student = new Stud(fullName, studentId, course);
+        manager.enrollStudent(studentId, student);
+
+        showAlert("Student enrolled successfully.");
+    }
+
+    private void removeStudent() {
+        int studentId = Integer.parseInt(studentIdField.getText());
+
+        if (manager.removeStudent(studentId)) {
+            showAlert("Student removed successfully.");
+        } else {
+            showAlert("Student not found.");
+        }
+    }
+
+    private void searchStudent() {
+        int studentId = Integer.parseInt(studentIdField.getText());
+        Stud student = manager.findStudent(studentId);
+
+        if (student != null) {
+            displayArea.setText(student.toString());
+        } else {
+            showAlert("Student not found.");
+        }
+    }
+
+    private void displayAllStudents() {
+        displayArea.clear();
+        manager.displayAllStudents();
+    }
+
+    private void showAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Information");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    public static void main(String[] args) {
+        launch(args);
+    }
+}
