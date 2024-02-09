@@ -1,0 +1,28 @@
+import java.util.HashMap;
+import java.util.Map;
+
+public class StudManager {
+    private Map<Integer, Stud> students;
+
+    public StudManager() {
+        this.students = new HashMap<>();
+    }
+
+    public void enrollStudent(int studentId, Stud student) {
+        students.put(studentId, student);
+    }
+
+    public boolean removeStudent(int studentId) {
+        return students.remove(studentId) != null;
+    }
+
+    public Stud findStudent(int studentId) {
+        return students.getOrDefault(studentId, null);
+    }
+
+    public void displayAllStudents() {
+        for (Stud student : students.values()) {
+            System.out.println(student);
+        }
+    }
+}
